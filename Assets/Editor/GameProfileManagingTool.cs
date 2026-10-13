@@ -27,7 +27,7 @@ namespace GameFramework.Editor
 
         void CreateGUI()
         {
-            // 加载 UXML，构建视觉树
+            // 1. 加载 UXML，构建视觉树
             if (GameProfileManagingToolVisualTreeAsset != null)
             {
                 GameProfileManagingToolVisualTreeAsset.CloneTree(rootVisualElement);
@@ -37,6 +37,9 @@ namespace GameFramework.Editor
                 Debug.LogError("未指定 UXML 资源，请在脚本 Inspector 中赋值");
                 return;
             }
+
+            // 2. 读取存档文件目录结构并可视化
+            
         }
 
         // 读取并显示现有存档数据
