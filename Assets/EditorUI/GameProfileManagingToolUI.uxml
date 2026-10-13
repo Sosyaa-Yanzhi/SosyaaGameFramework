@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="GameProfileManagingTool" style="flex-grow: 1; flex-direction: column;">
+        <ui:Label tabindex="-1" text="游戏存档编辑器" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ToolTitile" enable-rich-text="true" style="-unity-font-style: bold; -unity-font: initial; font-size: 19px; color: rgb(255, 255, 255); -unity-text-align: upper-left; white-space: nowrap; -unity-text-outline-width: 0; background-color: rgba(5, 206, 29, 0.21); border-left-color: rgb(0, 159, 20); border-right-color: rgb(0, 159, 20); border-top-color: rgb(0, 159, 20); border-bottom-color: rgb(0, 159, 20); border-top-width: 0; border-bottom-width: 1px;" />
+        <ui:VisualElement name="visualelment-profileviewer" style="flex-grow: 1; height: 168px;">
+            <ui:Label tabindex="-1" text="现有存档数据" parse-escape-sequences="true" display-tooltip-when-elided="true" name="label-profileviewertitle" style="color: rgb(255, 255, 255); background-color: rgba(255, 216, 0, 0.27);" />
+            <ui:ListView name="listview-gameprofiledatas" virtualization-method="DynamicHeight" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
