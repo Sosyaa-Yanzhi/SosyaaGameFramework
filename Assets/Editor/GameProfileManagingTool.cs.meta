@@ -7,6 +7,8 @@ MonoImporter:
   - m_ViewDataDictionary: {instanceID: 0}
   - GameProfileManagingToolVisualTreeAsset: {fileID: 9197481963319205126, guid: 71b9cdfd014d5c64287aedee936578ec,
       type: 3}
+  - AddProfileMapDialog: {fileID: 9197481963319205126, guid: 2a2f0d30403ee474188643fa10c7e4cc,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -31,17 +31,17 @@ namespace GameFramework.Profile
 
         #region 成员
         // 游戏存档列表
-        private List<GameProfile> gameProfiles = new List<GameProfile>();
+        private List<GameProfileMap> gameProfiles = new List<GameProfileMap>();
         #endregion
         
         #region 加载存档文件
-        public void LoadGameProfiles(string ProfilePath , ref GameProfile GameProfile_toLoad)
+        public void LoadGameProfiles(string ProfilePath , ref GameProfileMap GameProfile_toLoad)
         {
             // 如果有相关存档文件，直接进行读取
             if (File.Exists(ProfilePath))
             {
                 string content = File.ReadAllText(ProfilePath);
-                GameProfile_toLoad = JsonUtility.FromJson<GameProfile>(content);
+                GameProfile_toLoad = JsonUtility.FromJson<GameProfileMap>(content);
             }
             // 如果没有相关存档文件，在建立文件前进行询问
             else
@@ -52,7 +52,7 @@ namespace GameFramework.Profile
         #endregion
 
         #region 保存/更新存档文件
-        public void SaveGameProfiles(string ProfilePath , GameProfile GameProfile_toSave)
+        public void SaveGameProfiles(string ProfilePath , GameProfileMap GameProfile_toSave)
         {
             string json = JsonUtility.ToJson(GameProfile_toSave , true);
             File.WriteAllTextAsync(ProfilePath , json);

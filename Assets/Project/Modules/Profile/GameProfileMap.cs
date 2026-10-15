@@ -4,6 +4,8 @@ using UnityEngine;
 using GameFramework.Core;
 using System;
 using UnityEditor;
+using GameFramework.Profile;
+
 
 namespace GameFramework.Profile
 {
@@ -11,7 +13,7 @@ namespace GameFramework.Profile
     {
         Setting,
         InGameData,
-        AccountData 
+        AccountData
     }
 
     [Serializable]
@@ -19,7 +21,8 @@ namespace GameFramework.Profile
     {
         public string ProfileDataName = "NewProfileName";
         private DataType ProfileDataType = DataType.Int;
-        public object ProfileDataValue = 0;
+        public string ProfileDataValue = "";
+         
 
         public ProfileData(string name = "NewProfileName" , DataType dataType = DataType.Int)
         {
@@ -29,16 +32,22 @@ namespace GameFramework.Profile
             switch (dataType)
             {
                 case DataType.Int:
-                    ProfileDataValue = 0;
+                    ProfileDataValue = "0";
                     break;
                 case DataType.Float:
-                    ProfileDataValue = 0f;
+                    ProfileDataValue = "0f";
                     break;
                 case DataType.String:
                     ProfileDataValue = "";
                     break;
                 case DataType.Boolean:
-                    ProfileDataValue = false;
+                    ProfileDataValue = "false";
+                    break;
+                case DataType.Dictionary:
+                    ProfileDataValue = "<0,0>";
+                    break;
+                case DataType.List:
+                    ProfileDataValue = "[0,0]";
                     break;
                 default:
                     ProfileDataValue = null;
@@ -47,7 +56,7 @@ namespace GameFramework.Profile
         }
     }
 
-    public class GameProfile : ScriptableObject
+    public class GameProfileMap : ScriptableObject
     {
         [Header("存档种类")]
         public ProfileType profileType;
@@ -56,9 +65,17 @@ namespace GameFramework.Profile
         [Header("存档内容")]
         public List<ProfileData> profileDatas;
         
-        [Header("________________\n新增条目配置表")]
+        [Header("____________________________________\n新增条目配置表")]
         public string newProfileName = "NewProfileName";
         public DataType newProfileDataType = DataType.Int;
+
+        #region 构造函数
+        public GameProfileMap(ProfileType type , string name)
+        {
+            profileType = type;
+            profileName = name;
+        }
+        #endregion
 
         #region 添加存档内容条目
         // 合法性检测
@@ -82,16 +99,19 @@ namespace GameFramework.Profile
             profileDatas.Add(newProfileData);
         }
         #endregion
+
+        #region 保存存档表前的检查
+        #endregion
     }
 
-    [CustomEditor(typeof(GameProfile))]
+    [CustomEditor(typeof(GameProfileMap))]
     public class GameProfileEditor : Editor
     {
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
 
-            var profile = (GameProfile)target;
+            var profile = (GameProfileMap)target;
 
             var AddContentButton = GUILayout.Button("添加存档内容条目");
             if (AddContentButton)
