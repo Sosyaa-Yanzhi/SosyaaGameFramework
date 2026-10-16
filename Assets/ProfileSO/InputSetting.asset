@@ -16,6 +16,9 @@ MonoBehaviour:
   profileName: InputSetting
   profileDatas:
   - ProfileDataName: MoveForwardKey
+    ProfileDataType: 2
     ProfileDataValue: /Keyboard/w
+  profileFileType: 2
+  profileFilePath: D:\UnityProject\SosyaaGameFramework\Assets\ProfileFiles\InputSetting.xml
   newProfileName: MoveForwardKey
-  newProfileDataType: 3
+  newProfileDataType: 2

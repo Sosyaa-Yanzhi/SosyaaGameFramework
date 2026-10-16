@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<InputSetting xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <profileName>InputSetting</profileName>
+  <profileType>Setting</profileType>
+  <profileFileType>Xml</profileFileType>
+  <profileFilePath>D:\UnityProject\SosyaaGameFramework\Assets\ProfileFiles\InputSetting.xml</profileFilePath>
+  <profileDatas>
+    <ProfileData>
+      <ProfileDataName>MoveForwardKey</ProfileDataName>
+      <ProfileDataType>String</ProfileDataType>
+      <ProfileDataValue>/Keyboard/w</ProfileDataValue>
+    </ProfileData>
+  </profileDatas>
+</InputSetting>
