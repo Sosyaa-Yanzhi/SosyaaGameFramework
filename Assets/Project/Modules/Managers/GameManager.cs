@@ -8,6 +8,7 @@ namespace GameManager
     public enum GameState
     {
         MainMenu,
+        OnGameStart,
         Playing,
         Paused,
         GameOver
@@ -38,7 +39,7 @@ namespace GameManager
         #region 游戏状态管理
         public GameState CurrentGameState { get; private set; } = GameState.MainMenu;
 
-        void SetGameState(GameState gameState)
+        public void SetGameState(GameState gameState)
         {
             switch (gameState)
             {
@@ -55,13 +56,40 @@ namespace GameManager
                     Debug.Log("GameManager:游戏结束");
                     break;
             }
+            CurrentGameState = gameState;
         }
         #endregion
 
         #region 游戏存档管理
-        void LoadSettingData(string filePath)
+        void LoadProfile(string filePath)
         {
             
+        }
+        #endregion
+
+        #region 游戏状态实现逻辑
+        // 切回主菜单逻辑
+        public void BackToMainMenuFunc()
+        {
+            SetGameState(GameState.MainMenu);
+        }
+
+        // 开始游戏逻辑
+        public void StartGameFunc()
+        {
+            SetGameState(GameState.OnGameStart);
+        }
+
+        // 进行游戏逻辑
+        public void PlayingFunc()
+        {
+            SetGameState(GameState.Playing);
+        }
+
+        // 结束游戏逻辑
+        public void EndGameFunc()
+        {
+            SetGameState(GameState.GameOver);
         }
         #endregion
     }
