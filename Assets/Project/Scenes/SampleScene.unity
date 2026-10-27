@@ -196,6 +196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69a8930f913032f44b0e018fd8a4245b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputSetting_SO: {fileID: 0}
   PlayerCharacterCharacter_MoveForward_Key: /Keyboard/w
   PlayerCharacter_MoveBackward_Key: /Keyboard/s
   PlayerCharacter_MoveLeft_Key: /Keyboard/a

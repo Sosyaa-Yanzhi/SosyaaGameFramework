@@ -13,53 +13,61 @@ namespace GameFramework.Profile.XML
         public ProfileType profileType;
         public ProfileFileType profileFileType;
         public string profileFilePath;
-        public List<ProfileData> profileDatas;
+        public Dictionary<string, ProfileData> profileDatas = new Dictionary<string, ProfileData>();
 
         public GameProfileMapXML() { }
     }
     public class XMLForProfile : MonoBehaviour
     {
         #region 保存存档到XML文件
-        public static void SaveProfileToXML(GameProfileMap profile)
+        public static void SaveProfileToXML(GameProfileMap profileMap)
         {
             var xmlProfile = new GameProfileMapXML
             {
-                profileName = profile.profileName,
-                profileType = profile.profileType,
-                profileFileType = profile.profileFileType,
-                profileFilePath = profile.profileFilePath,
-                profileDatas = profile.profileDatas
+                profileName = profileMap.profileName,
+                profileType = profileMap.profileType,
+                profileFileType = profileMap.profileFileType,
+                profileFilePath = profileMap.profileFilePath,
+                profileDatas = profileMap.profileDatas ?? new Dictionary<string, ProfileData>()
             };
 
-            var rootAttribute = new XmlRootAttribute(profile.profileName);
+            var rootAttribute = new XmlRootAttribute(profileMap.profileName);
             var serializer = new XmlSerializer(typeof(GameProfileMapXML) , rootAttribute);
-            using (var stream = new FileStream(profile.profileFilePath, FileMode.Create))
+            using (var stream = new FileStream(profileMap.profileFilePath, FileMode.Create))
             {
                 serializer.Serialize(stream, xmlProfile);
             }
-            Debug.Log($"存档文件保存成功，路径为 {profile.profileFilePath}");
+            Debug.Log($"存档文件保存成功，路径为 {profileMap.profileFilePath}");
         }
         #endregion
 
         #region 从XML文件加载存档
-        public static void LoadProfileFromXML(ref GameProfileMap profile)
+        public static void LoadProfileFromXML(ref GameProfileMap profileMap)
         {
-            if (File.Exists(profile.profileFilePath))
+            if (File.Exists(profileMap.profileFilePath))
             {
                 var serializer = new XmlSerializer(typeof(GameProfileMapXML));
-                using (var stream = new FileStream(profile.profileFilePath, FileMode.Open))
+                using (var stream = new FileStream(profileMap.profileFilePath, FileMode.Open))
                 {
                     var loadedProfile = (GameProfileMapXML)serializer.Deserialize(stream);
-                    profile.profileName = loadedProfile.profileName;
-                    profile.profileFileType = loadedProfile.profileFileType;
-                    profile.profileFilePath = loadedProfile.profileFilePath;
-                    profile.profileDatas = loadedProfile.profileDatas;
+                    profileMap.profileName = loadedProfile.profileName;
+                    profileMap.profileType = loadedProfile.profileType;
+                    profileMap.profileFileType = loadedProfile.profileFileType;
+                    profileMap.profileFilePath = loadedProfile.profileFilePath;
+                    profileMap.profileDatas = new Dictionary<string, ProfileData>();
+                    if (loadedProfile.profileDatas != null)
+                    {
+                        foreach (var kvp in loadedProfile.profileDatas)
+                        {
+                            profileMap.profileDatas.Add(kvp.Key, kvp.Value);
+                        }
+                    }
                 }
-                Debug.Log($"存档文件加载成功，路径为 {profile.profileFilePath}");
+                Debug.Log($"存档文件加载成功，路径为 {profileMap.profileFilePath}");
             }
             else
             {
-                Debug.LogError($"存档文件加载失败：文件不存在，路径为 {profile.profileFilePath}");
+                Debug.LogError($"存档文件加载失败：文件不存在，路径为 {profileMap.profileFilePath}");
             }
         }
         #endregion

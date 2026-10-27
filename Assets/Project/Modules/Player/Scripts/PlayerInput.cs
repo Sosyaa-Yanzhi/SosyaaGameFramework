@@ -54,16 +54,16 @@ public class PlayerInput : MonoBehaviour
 
         // 从 InputManager 获取键位表
         InputManager inputManager = InputManager.Instance;
-        inputManager.SetInput(PlayerMoveAction , inputManager.GetPartIndex(PlayerMoveAction , "Up") , inputManager.PlayerCharacterCharacter_MoveForward_Key);
-        inputManager.SetInput(PlayerMoveAction , inputManager.GetPartIndex(PlayerMoveAction , "Down") , inputManager.PlayerCharacter_MoveBackward_Key);
-        inputManager.SetInput(PlayerMoveAction , inputManager.GetPartIndex(PlayerMoveAction , "Left") , inputManager.PlayerCharacter_MoveLeft_Key);
-        inputManager.SetInput(PlayerMoveAction , inputManager.GetPartIndex(PlayerMoveAction , "Right") , inputManager.PlayerCharacter_MoveRight_Key);
-        inputManager.SetInput(PlayerSprintAction , 0 , inputManager.PlayerCharacter_Sprint_Key);
-        inputManager.SetInput(PlayerJumpAction , 0 , inputManager.PlayerCharacter_Jump_Key);
-        inputManager.SetInput(PlayerInteractAction , 0 , inputManager.PlayerCharacter_Interact_Key);
-        inputManager.SetInput(PlayerAttackAction , 0 , inputManager.PlayerCharacter_Attack_Key);
-        inputManager.SetInput(PlayerAimAction , 0 , inputManager.PlayerCharacter_Aim_Key);
-        inputManager.SetInput(PlayerReloadAction , 0 , inputManager.PlayerCharacter_Reload_Key);
+        SetInputFromSettings(inputManager, PlayerMoveAction, "Up", "MoveForwardKey");
+        SetInputFromSettings(inputManager, PlayerMoveAction, "Down", "MoveBackwardKey");
+        SetInputFromSettings(inputManager, PlayerMoveAction, "Left", "MoveLeftKey");
+        SetInputFromSettings(inputManager, PlayerMoveAction, "Right", "MoveRightKey");
+        SetInputFromSettings(inputManager, PlayerSprintAction, 0, "SprintKey");
+        SetInputFromSettings(inputManager, PlayerJumpAction, 0, "JumpKey");
+        SetInputFromSettings(inputManager, PlayerInteractAction, 0, "InteractKey");
+        SetInputFromSettings(inputManager, PlayerAttackAction, 0, "AttackKey");
+        SetInputFromSettings(inputManager, PlayerAimAction, 0, "AimKey");
+        SetInputFromSettings(inputManager, PlayerReloadAction, 0, "ReloadKey");
     }
 
     void OnDisable()
@@ -77,6 +77,22 @@ public class PlayerInput : MonoBehaviour
         RemovePerformed(PlayerAttackAction , playerActions.PlayerAttack);
         RemovePerformed(PlayerAimAction , playerActions.PlayerAim);
         RemovePerformed(PlayerReloadAction , playerActions.PlayerReload);
+    }
+
+    void SetInputFromSettings(InputManager inputManager, InputAction action, string compositePart, string settingName)
+    {
+        int bindingIndex = inputManager.GetPartIndex(action, compositePart);
+        SetInputFromSettings(inputManager, action, bindingIndex, settingName);
+    }
+
+    void SetInputFromSettings(InputManager inputManager, InputAction action, int bindingIndex, string settingName)
+    {
+        if (bindingIndex >= 0 &&
+            inputManager.KeyInputs.TryGetValue(settingName, out string inputPath) &&
+            !string.IsNullOrEmpty(inputPath))
+        {
+            inputManager.SetInput(action, bindingIndex, inputPath);
+        }
     }
 
     #region 获取玩家 InputAction

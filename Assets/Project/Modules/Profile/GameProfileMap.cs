@@ -27,8 +27,7 @@ namespace GameFramework.Profile
         public string ProfileDataValue = "";
 
         public ProfileData() { }
-         
-
+        
         public ProfileData(string name = "NewProfileName" , DataType dataType = DataType.Int)
         {
             ProfileDataName = name;
@@ -43,16 +42,16 @@ namespace GameFramework.Profile
                     ProfileDataValue = "0f";
                     break;
                 case DataType.String:
-                    ProfileDataValue = "";
+                    ProfileDataValue = "content string";
                     break;
                 case DataType.Boolean:
                     ProfileDataValue = "false";
                     break;
                 case DataType.Dictionary:
-                    ProfileDataValue = "<0,0>";
+                    ProfileDataValue = "{\"key\":\"value\"}";
                     break;
                 case DataType.List:
-                    ProfileDataValue = "[0,0]";
+                    ProfileDataValue = "[\"content_1\" , \"content_2\"]";
                     break;
                 default:
                     ProfileDataValue = null;
@@ -63,12 +62,13 @@ namespace GameFramework.Profile
 
     public class GameProfileMap : ScriptableObject
     {
+        #region 成员
         [Header("存档种类")]
         public ProfileType profileType;
         [Header("存档名称")]
         public string profileName;
         [Header("存档内容")]
-        public List<ProfileData> profileDatas;
+        public Dictionary<string , ProfileData> profileDatas;
         [Header("存档文件类型")]
         public ProfileFileType profileFileType = ProfileFileType.Json;
         [Header("存档文件路径")]
@@ -79,6 +79,7 @@ namespace GameFramework.Profile
         public string newProfileName = "NewProfileName";
         [JsonIgnore]
         public DataType newProfileDataType = DataType.Int;
+        #endregion
 
         #region 构造函数
         public GameProfileMap() { }
@@ -94,7 +95,7 @@ namespace GameFramework.Profile
         public bool IsNewProfileLegal()
         {
             // 进行检查：不允许同名字段出现
-            foreach (var profileData in profileDatas)
+            foreach (var profileData in profileDatas.Values)
             {
                 if (profileData.ProfileDataName == newProfileName)
                 {
@@ -108,14 +109,14 @@ namespace GameFramework.Profile
         public void AddNewProfileContent()
         {
             var newProfileData = new ProfileData(newProfileName , newProfileDataType);
-            profileDatas.Add(newProfileData);
+            profileDatas.Add(newProfileName, newProfileData);
         }
         #endregion
 
         #region 保存存档表前的检查
         public bool CheckBeforeSaving()
         {
-            foreach (var profileData in profileDatas)
+            foreach (var profileData in profileDatas.Values)
             {
                 switch (profileData.ProfileDataType)
                 {
@@ -172,6 +173,44 @@ namespace GameFramework.Profile
             }
             return true;
         }
+        #endregion
+
+        #region Json文件解析方法
+        public List<T> GetListFromJsonFile<T>(GameProfileMap gameProfileMap , ProfileData profileData)
+        {
+            if (gameProfileMap.profileFileType != ProfileFileType.Json)
+            {
+                Debug.LogWarning($"{profileData.ProfileDataName} 数据字段读取失败：数据表所设不是对应的文件类型。");
+                return null;
+            }
+            if (profileData.ProfileDataType != DataType.List)
+            {
+                Debug.LogWarning($"{profileData.ProfileDataName} 数据字段读取失败：字段数据种类不匹配（不为DataType.List）。");
+                return null;
+            }
+            return JsonConvert.DeserializeObject<List<T>>(profileData.ProfileDataValue);
+        }
+
+        public Dictionary<TKey , TValue> GetDictionaryFromJsonFile<TKey , TValue>(GameProfileMap gameProfileMap , ProfileData profileData)
+        {
+            if (gameProfileMap.profileFileType != ProfileFileType.Json)
+            {
+                Debug.LogWarning($"{profileData.ProfileDataName} 数据字段读取失败：数据表所设不是对应的文件类型。");
+                return null;
+            }
+            if (profileData.ProfileDataType != DataType.Dictionary)
+            {
+                Debug.LogWarning($"{profileData.ProfileDataName} 数据字段读取失败：字段数据种类不匹配（不为DataType.Dictionary）。");
+                return null;
+            }
+            return JsonConvert.DeserializeObject<Dictionary<TKey , TValue>>(profileData.ProfileDataValue);
+        }
+        #endregion
+    
+        #region XML文件解析方法
+        #endregion
+
+        #region Binary文件解析方法
         #endregion
     }
 

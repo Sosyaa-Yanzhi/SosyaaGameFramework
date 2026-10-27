@@ -2,13 +2,8 @@
 
 local ButtonClass = CS.UnityEngine.UI.Button
 local EventBusClass = CS.GameFramework.Core.EventBus
-local UnityEventClass = CS.UnityEngine.Events.UnityEngine
 
 local ButtonComponent = nil
-
-local StartGameEvent = {
-    
-}
 
 -- 发送开始游戏请求
 function SendStartGameRequst()
