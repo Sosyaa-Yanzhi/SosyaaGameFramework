@@ -92,5 +92,9 @@ namespace GameManager
             SetGameState(GameState.GameOver);
         }
         #endregion
+
+        #region 各管理器管理
+        
+        #endregion
     }
 }

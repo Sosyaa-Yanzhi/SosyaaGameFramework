@@ -12,13 +12,16 @@ using Newtonsoft.Json;
 
 namespace GameFramework.Profile
 {
+    #region 存档类型枚举
     public enum ProfileType
     {
         Setting,
         InGameData,
         AccountData
     }
+    #endregion
 
+    #region 存档数据类 - ProfileData 
     [Serializable]
     public class ProfileData
     {
@@ -39,7 +42,7 @@ namespace GameFramework.Profile
                     ProfileDataValue = "0";
                     break;
                 case DataType.Float:
-                    ProfileDataValue = "0f";
+                    ProfileDataValue = "0.0";
                     break;
                 case DataType.String:
                     ProfileDataValue = "content string";
@@ -59,6 +62,8 @@ namespace GameFramework.Profile
             }
         }
     }
+    #endregion
+
 
     public class GameProfileMap : ScriptableObject
     {
@@ -67,8 +72,12 @@ namespace GameFramework.Profile
         public ProfileType profileType;
         [Header("存档名称")]
         public string profileName;
+        /// <summary>
+        /// Dictionary在较旧版本的Unity中可能无法直接显示在Inspector中，
+        /// 因此使用SerialiezableDictionary来进行可视化。
+        /// </summary>
         [Header("存档内容")]
-        public Dictionary<string , ProfileData> profileDatas;
+        public List<SerializableDictionary<string , ProfileData>> profileDatasList = new List<SerializableDictionary<string , ProfileData>>();
         [Header("存档文件类型")]
         public ProfileFileType profileFileType = ProfileFileType.Json;
         [Header("存档文件路径")]
@@ -95,9 +104,14 @@ namespace GameFramework.Profile
         public bool IsNewProfileLegal()
         {
             // 进行检查：不允许同名字段出现
-            foreach (var profileData in profileDatas.Values)
+            if (profileDatasList == null)
             {
-                if (profileData.ProfileDataName == newProfileName)
+                return true;
+            }
+            foreach (var profileDataEntry in profileDatasList)
+            {
+                if (profileDataEntry.key == newProfileName ||
+                    (profileDataEntry.value != null && profileDataEntry.value.ProfileDataName == newProfileName))
                 {
                     return false;
                 }
@@ -109,15 +123,37 @@ namespace GameFramework.Profile
         public void AddNewProfileContent()
         {
             var newProfileData = new ProfileData(newProfileName , newProfileDataType);
-            profileDatas.Add(newProfileName, newProfileData);
+            if (profileDatasList == null)
+            {
+                profileDatasList = new List<SerializableDictionary<string, ProfileData>>();
+            }
+            profileDatasList.Add(new SerializableDictionary<string, ProfileData>(newProfileName, newProfileData));
         }
         #endregion
 
         #region 保存存档表前的检查
         public bool CheckBeforeSaving()
         {
-            foreach (var profileData in profileDatas.Values)
+            if (profileDatasList == null)
             {
+                return true;
+            }
+
+            foreach (var profileDataEntry in profileDatasList)
+            {
+                if (string.IsNullOrEmpty(profileDataEntry.key))
+                {
+                    Debug.LogError($"{profileName}保存失败！存档字段名称不能为空！");
+                    return false;
+                }
+
+                var profileData = profileDataEntry.value;
+                if (profileData == null)
+                {
+                    Debug.LogError($"{profileName}保存失败！存档字段内容为空！");
+                    return false;
+                }
+
                 switch (profileData.ProfileDataType)
                 {
                     case DataType.Int:
@@ -224,6 +260,7 @@ namespace GameFramework.Profile
 
             var profile = (GameProfileMap)target;
 
+            // 新增存档内容字段按钮及功能
             var AddContentButton = GUILayout.Button("添加存档内容字段");
             if (AddContentButton)
             {
@@ -284,6 +321,9 @@ namespace GameFramework.Profile
                     Debug.LogError($"{profile.profileName}存档文件预览失败！未找到指定路径的存档文件！");
                 }
             }
+
+            // 字段内容格式化生成按钮及功能
+            var FormatContentButton = GUILayout.Button("格式化写入字段内容");
         }
     }
     #endregion

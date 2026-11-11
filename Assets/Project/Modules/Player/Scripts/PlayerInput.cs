@@ -38,63 +38,7 @@ public class PlayerInput : MonoBehaviour
         // 获取玩家对象
         PlayerObject = GameObject.FindWithTag("Player");
     }
-
-    void OnEnable()
-    {
-        PlayerActions playerActions = PlayerObject.GetComponent<PlayerActions>();
-
-        // 将 performed 事件接到 Player 方法
-        AddPerformed(PlayerMoveAction , playerActions.PlayerMove);
-        AddPerformed(PlayerJumpAction , playerActions.PlayerJump);
-        AddPerformed(PlayerSprintAction , playerActions.PlayerSprint);
-        AddPerformed(PlayerInteractAction , playerActions.PlayerInteract);
-        AddPerformed(PlayerAttackAction , playerActions.PlayerAttack);
-        AddPerformed(PlayerAimAction , playerActions.PlayerAim);
-        AddPerformed(PlayerReloadAction , playerActions.PlayerReload);
-
-        // 从 InputManager 获取键位表
-        InputManager inputManager = InputManager.Instance;
-        SetInputFromSettings(inputManager, PlayerMoveAction, "Up", "MoveForwardKey");
-        SetInputFromSettings(inputManager, PlayerMoveAction, "Down", "MoveBackwardKey");
-        SetInputFromSettings(inputManager, PlayerMoveAction, "Left", "MoveLeftKey");
-        SetInputFromSettings(inputManager, PlayerMoveAction, "Right", "MoveRightKey");
-        SetInputFromSettings(inputManager, PlayerSprintAction, 0, "SprintKey");
-        SetInputFromSettings(inputManager, PlayerJumpAction, 0, "JumpKey");
-        SetInputFromSettings(inputManager, PlayerInteractAction, 0, "InteractKey");
-        SetInputFromSettings(inputManager, PlayerAttackAction, 0, "AttackKey");
-        SetInputFromSettings(inputManager, PlayerAimAction, 0, "AimKey");
-        SetInputFromSettings(inputManager, PlayerReloadAction, 0, "ReloadKey");
-    }
-
-    void OnDisable()
-    {
-        PlayerActions playerActions = PlayerObject.GetComponent<PlayerActions>();
-        // 将 performed 事件移除自 Player 方法
-        RemovePerformed(PlayerMoveAction , playerActions.PlayerMove);
-        RemovePerformed(PlayerJumpAction , playerActions.PlayerJump);
-        RemovePerformed(PlayerSprintAction , playerActions.PlayerSprint);
-        RemovePerformed(PlayerInteractAction , playerActions.PlayerInteract);
-        RemovePerformed(PlayerAttackAction , playerActions.PlayerAttack);
-        RemovePerformed(PlayerAimAction , playerActions.PlayerAim);
-        RemovePerformed(PlayerReloadAction , playerActions.PlayerReload);
-    }
-
-    void SetInputFromSettings(InputManager inputManager, InputAction action, string compositePart, string settingName)
-    {
-        int bindingIndex = inputManager.GetPartIndex(action, compositePart);
-        SetInputFromSettings(inputManager, action, bindingIndex, settingName);
-    }
-
-    void SetInputFromSettings(InputManager inputManager, InputAction action, int bindingIndex, string settingName)
-    {
-        if (bindingIndex >= 0 &&
-            inputManager.KeyInputs.TryGetValue(settingName, out string inputPath) &&
-            !string.IsNullOrEmpty(inputPath))
-        {
-            inputManager.SetInput(action, bindingIndex, inputPath);
-        }
-    }
-
+    
     #region 获取玩家 InputAction
     void GetPlayerInputAction(ref InputAction inputAction , string map , string action)
     {

@@ -17,13 +17,14 @@ namespace GameFramework.Profile.Binary
                     writer.Write(profileMap.profileName);
                     writer.Write((int)profileMap.profileType);
                     writer.Write((int)profileMap.profileFileType);
-                    writer.Write(profileMap.profileDatas.Count);
-                    foreach (var data in profileMap.profileDatas)
+                    var profileDatas = profileMap.profileDatasList ?? new List<SerializableDictionary<string, ProfileData>>();
+                    writer.Write(profileDatas.Count);
+                    foreach (var data in profileDatas)
                     {
-                        writer.Write(data.Key);
-                        writer.Write(data.Value.ProfileDataName);
-                        writer.Write((int)data.Value.ProfileDataType);
-                        writer.Write(data.Value.ProfileDataValue);
+                        writer.Write(data.key);
+                        writer.Write(data.value.ProfileDataName);
+                        writer.Write((int)data.value.ProfileDataType);
+                        writer.Write(data.value.ProfileDataValue);
                     }
                 }
             }
@@ -34,8 +35,11 @@ namespace GameFramework.Profile.Binary
         #region 从二进制文件加载存档
         public static void LoadProfileFromBinary(ref GameProfileMap profileMap)
         {
-            // 加载前先进行清空List
-            profileMap.profileDatas.Clear();
+            if (profileMap.profileDatasList == null)
+            {
+                profileMap.profileDatasList = new List<SerializableDictionary<string, ProfileData>>();
+            }
+            profileMap.profileDatasList.Clear();
             
             using (var stream = new FileStream(profileMap.profileFilePath, FileMode.Open))
             {
@@ -45,13 +49,14 @@ namespace GameFramework.Profile.Binary
                     profileMap.profileType = (ProfileType)reader.ReadInt32();
                     profileMap.profileFileType = (ProfileFileType)reader.ReadInt32();
                     int dataCount = reader.ReadInt32();
-                    profileMap.profileDatas.Clear();
                     for (int i = 0; i < dataCount; i++)
                     {
+                        var dataKey = reader.ReadString();
                         var dataName = reader.ReadString();
                         var dataType = (DataType)reader.ReadInt32();
                         var dataValue = reader.ReadString();
-                        profileMap.profileDatas.Add(dataName , new ProfileData(dataName, dataType) { ProfileDataValue = dataValue });
+                        var data = new ProfileData(dataName, dataType) { ProfileDataValue = dataValue };
+                        profileMap.profileDatasList.Add(new SerializableDictionary<string, ProfileData>(dataKey, data));
                     }
                 }
             }

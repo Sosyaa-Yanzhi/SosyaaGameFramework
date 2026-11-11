@@ -13,7 +13,7 @@ namespace GameFramework.Profile.XML
         public ProfileType profileType;
         public ProfileFileType profileFileType;
         public string profileFilePath;
-        public Dictionary<string, ProfileData> profileDatas = new Dictionary<string, ProfileData>();
+        public List<SerializableDictionary<string, ProfileData>> profileDatasList = new List<SerializableDictionary<string, ProfileData>>();
 
         public GameProfileMapXML() { }
     }
@@ -28,7 +28,7 @@ namespace GameFramework.Profile.XML
                 profileType = profileMap.profileType,
                 profileFileType = profileMap.profileFileType,
                 profileFilePath = profileMap.profileFilePath,
-                profileDatas = profileMap.profileDatas ?? new Dictionary<string, ProfileData>()
+                profileDatasList = profileMap.profileDatasList ?? new List<SerializableDictionary<string, ProfileData>>()
             };
 
             var rootAttribute = new XmlRootAttribute(profileMap.profileName);
@@ -46,7 +46,7 @@ namespace GameFramework.Profile.XML
         {
             if (File.Exists(profileMap.profileFilePath))
             {
-                var serializer = new XmlSerializer(typeof(GameProfileMapXML));
+                var serializer = new XmlSerializer(typeof(GameProfileMapXML), new XmlRootAttribute(profileMap.profileName));
                 using (var stream = new FileStream(profileMap.profileFilePath, FileMode.Open))
                 {
                     var loadedProfile = (GameProfileMapXML)serializer.Deserialize(stream);
@@ -54,13 +54,10 @@ namespace GameFramework.Profile.XML
                     profileMap.profileType = loadedProfile.profileType;
                     profileMap.profileFileType = loadedProfile.profileFileType;
                     profileMap.profileFilePath = loadedProfile.profileFilePath;
-                    profileMap.profileDatas = new Dictionary<string, ProfileData>();
-                    if (loadedProfile.profileDatas != null)
+                    profileMap.profileDatasList = new List<SerializableDictionary<string, ProfileData>>();
+                    if (loadedProfile.profileDatasList != null && loadedProfile.profileDatasList.Count > 0)
                     {
-                        foreach (var kvp in loadedProfile.profileDatas)
-                        {
-                            profileMap.profileDatas.Add(kvp.Key, kvp.Value);
-                        }
+                        profileMap.profileDatasList.AddRange(loadedProfile.profileDatasList);
                     }
                 }
                 Debug.Log($"存档文件加载成功，路径为 {profileMap.profileFilePath}");

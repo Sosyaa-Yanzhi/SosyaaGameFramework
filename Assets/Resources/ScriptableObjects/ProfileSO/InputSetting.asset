@@ -14,11 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   profileType: 0
   profileName: InputSetting
-  profileDatas:
-  - ProfileDataName: MoveForwardKey
-    ProfileDataType: 2
-    ProfileDataValue: /Keyboard/w
-  profileFileType: 2
-  profileFilePath: D:\UnityProject\SosyaaGameFramework\Assets\ProfileFiles\InputSetting.xml
-  newProfileName: MoveForwardKey
-  newProfileDataType: 2
+  profileDatasList:
+  - key: Fire
+    value:
+      ProfileDataName: Fire
+      ProfileDataType: 2
+      ProfileDataValue: content string
+  - key: PickUp
+    value:
+      ProfileDataName: PickUp
+      ProfileDataType: 5
+      ProfileDataValue: '["content_1" , "content_2"]'
+  profileFileType: 0
+  profileFilePath: D:\UnityProject\SosyaaGameFramework\Assets\ProfileFiles\InputSetting.json
+  newProfileName: PickUp
+  newProfileDataType: 5

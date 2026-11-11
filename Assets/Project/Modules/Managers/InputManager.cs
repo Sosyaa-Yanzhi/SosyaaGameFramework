@@ -38,7 +38,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] private GameProfileMap inputSetting_SO;
     [Header("玩家InputActionMap")]
     [Tooltip("实际使用的玩家键位的map")]
-    [SerializeField] private InputActionMap playerInputActionMap;
+    [SerializeField] private InputActionAsset playerInputActionMap;
     #endregion
 
     #region 键位列表
@@ -48,43 +48,39 @@ public class InputManager : MonoBehaviour
     /// 则应在键位数据表SO中进行相关更新后打包InputActionMap及SO的AA包。
     /// </summary>
     [Header("键位")]
-    public Dictionary<string , string> KeyInputs = new Dictionary<string, string>(); 
+    public Dictionary<string , List<string>> ButtonBindings = new Dictionary<string, List<string>>();  // <动作名 , 键位路径>
     #endregion
 
     #region 读取键位方法
     /// <summary>
     /// 从键位表SO进行读取，需确认键位表SO正确读取对应存档文件。
     /// 建议在游戏开始时读取一次，之后通过玩家重绑定键位方法进行修改。
+    /// 建议在读取SO的数据完成自身不同种类的键位字典构建后再统一映射到InputActionMap中。
     /// </summary>
-    void GetKeyInputSetting()
+    void GetButtonBindingsFromJson()
     {
-        // 读取数据并构建键位输入字典
-        foreach (ProfileData profileData in inputSetting_SO.profileDatas.Values)
+        if (inputSetting_SO.profileFileType != ProfileFileType.Json)
         {
-            if (profileData.ProfileDataType != DataType.String)
+            Debug.LogWarning("无法正常读取键位数据表SO：当前存档文件类型非Json。");
+            return;
+        }
+
+        if (inputSetting_SO.profileDatasList == null)
+        {
+            Debug.LogWarning("无法正常读取键位数据表SO：存档内容列表为空。");
+            return;
+        }
+
+        // 读取数据并构建键位输入字典
+        foreach (var profileDataEntry in inputSetting_SO.profileDatasList)
+        {
+            ProfileData profileData = profileDataEntry.value;
+            if (profileData == null || profileData.ProfileDataType != DataType.List)
             {
                 Debug.LogWarning("无法正常读取键位数据表SO：出现不可读取字段数据类型。");
                 return;
             }
-            KeyInputs.Add(profileData.ProfileDataName , profileData.ProfileDataValue);
-        }
-
-        // 同步到InputActionMap中 - 若InputActionMap中有多的Action，使用其中的默认键位
-        foreach (InputAction action in playerInputActionMap.actions)
-        {
-            try
-            {
-                /// <summary>
-                /// 若仅有一个键位输入，直接绑定 BindingIndex = 0；
-                /// 若不止一个键位输入，则根据顺序依次进行同步绑定。
-                /// </summary>
-                
-                
-            }
-            catch
-            {
-                
-            }
+            ButtonBindings.Add(profileData.ProfileDataName, inputSetting_SO.GetListFromJsonFile<string>(inputSetting_SO , profileData));
         }
     }
     #endregion
@@ -150,4 +146,27 @@ public class InputManager : MonoBehaviour
         return -1;
     }
     #endregion
+
+    void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    void Start()
+    {
+        if (inputSetting_SO == null)
+        {
+            Debug.LogError("InputManager: 键位表SO未设置，请在Inspector中设置！");
+            return;
+        }
+        GetButtonBindingsFromJson();
+    }
 }
