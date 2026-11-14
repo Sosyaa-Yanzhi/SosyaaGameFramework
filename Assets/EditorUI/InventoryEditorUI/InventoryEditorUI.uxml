@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement name="visualelement-config" style="flex-grow: 1; height: 130px; max-height: 130px; min-height: 130px; border-bottom-width: 5px; border-bottom-color: rgba(255, 255, 255, 0.41);">
+        <uie:ObjectField label="父级物体&#10;" name="objectfield-parentobject" style="max-height: 35px; width: 259px; min-height: 35px; height: 35px; -unity-font-style: bold; color: rgb(255, 255, 255);" />
+        <ui:VisualElement name="visualelement-compconfig" style="flex-grow: 1; flex-direction: row; max-height: 35px; min-height: 35px;">
+            <uie:ObjectField label="待生成的网格组件" name="objectfield-inventorycomp" style="height: 35px; max-height: 35px; min-height: 35px; -unity-font-style: bold; color: rgb(255, 255, 255); width: 271px;" />
+            <ui:TextField picking-mode="Ignore" label="网格名称" value="filler text" name="textfield-slotname" style="width: 274px; -unity-font-style: bold; color: rgb(255, 255, 255); min-height: 35px; max-height: 35px; height: 35px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="viusalelement-sizeconfig" style="flex-grow: 1; flex-direction: row; max-height: 38px; min-height: 19px; height: 30px;">
+            <ui:TextField picking-mode="Ignore" label="宽" value="filler text" name="textfield-width" style="color: rgb(255, 255, 255); -unity-font-style: bold;" />
+            <ui:TextField picking-mode="Ignore" label="高" value="filler text" name="textfield-height" style="color: rgb(255, 255, 255); -unity-font-style: bold;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="visualelement-funtionalbutton" style="flex-grow: 1; flex-direction: row-reverse; height: 35px; max-height: 35px; min-height: 35px;">
+        <ui:Button text="清空选中" parse-escape-sequences="true" display-tooltip-when-elided="true" name="button-clear" style="border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; -unity-font-style: bold;" />
+        <ui:Button text="创建容器网格" parse-escape-sequences="true" display-tooltip-when-elided="true" name="button-create" style="border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; -unity-font-style: bold;" />
+        <ui:Button text="应用规格" parse-escape-sequences="true" display-tooltip-when-elided="true" name="button-applyset" style="border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; -unity-font-style: bold;" />
+        <ui:TextField picking-mode="Ignore" label="指定网格规格" value="filler text" name="textfield-setscale" style="width: 246px; flex-direction: row; color: rgb(255, 255, 255); -unity-font-style: bold;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="visualelement-inventoryslots" style="flex-grow: 1; height: auto; max-height: none; flex-direction: column;">
+        <ui:Label tabindex="-1" text="当前选中：100x100" parse-escape-sequences="true" display-tooltip-when-elided="true" name="label-currentselected" style="color: rgb(255, 255, 255); -unity-font-style: bold;" />
+        <ui:ScrollView name="scrollview-buttonview" style="height: 328px;" />
+    </ui:VisualElement>
+</ui:UXML>

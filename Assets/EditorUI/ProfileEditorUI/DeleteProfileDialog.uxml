@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement style="flex-grow: 1; height: 126px; max-height: 126px;">
+        <ui:Label tabindex="-1" text="删除存档数据表" parse-escape-sequences="true" display-tooltip-when-elided="true" name="label-dialogtitle" style="color: rgb(255, 255, 255); -unity-font-style: bold; font-size: 20px; background-color: rgba(231, 0, 0, 0.51); border-bottom-width: 3px; border-bottom-color: rgb(255, 0, 0); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+        <uie:ObjectField label="待删除数据表&#10;" name="objectfield-mapso" style="height: 30px; -unity-font-style: bold;" />
+        <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
+            <ui:Button text=" 确认删除" parse-escape-sequences="true" display-tooltip-when-elided="true" name="button-deleteconfirm" style="width: 138px; height: 26px; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; color: rgb(255, 255, 255); background-color: rgb(81, 81, 81); -unity-font-style: bold;" />
+            <ui:Button text="取消" parse-escape-sequences="true" display-tooltip-when-elided="true" name="button-cancel" style="width: 138px; height: 26px; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; color: rgb(255, 255, 255); background-color: rgb(81, 81, 81); -unity-font-style: bold;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
