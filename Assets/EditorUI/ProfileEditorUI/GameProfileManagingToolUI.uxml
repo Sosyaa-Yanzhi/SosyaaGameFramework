@@ -1,9 +1,14 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
-    <ui:VisualElement name="GameProfileManagingTool" style="flex-grow: 1; flex-direction: column; height: 312px; max-height: 77px;">
+    <ui:VisualElement name="GameProfileManagingTool" style="flex-grow: 1; flex-direction: column; height: 250px; max-height: 250px;">
         <ui:Label tabindex="-1" text="游戏存档编辑器" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ToolTitile" enable-rich-text="true" style="-unity-font-style: bold; -unity-font: initial; font-size: 19px; color: rgb(255, 255, 255); -unity-text-align: upper-left; white-space: nowrap; -unity-text-outline-width: 0; background-color: rgba(5, 206, 29, 0.21); border-left-color: rgb(0, 159, 20); border-right-color: rgb(0, 159, 20); border-top-color: rgb(0, 159, 20); border-bottom-color: rgb(0, 159, 20); border-top-width: 0; border-bottom-width: 1px; border-top-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; border-bottom-left-radius: 1px;" />
-        <ui:VisualElement name="visualelement-buttons" style="flex-grow: 1; flex-direction: row-reverse; max-height: 33px;">
+        <ui:VisualElement name="visualelement-buttons" style="flex-grow: 1; flex-direction: row-reverse; max-height: 41px; min-height: 41px;">
             <ui:Button text="删除存储表" parse-escape-sequences="true" display-tooltip-when-elided="true" name="button-deleteprofilemap" enable-rich-text="true" style="width: 75px; height: 24px; left: -2px; top: 4px;" />
             <ui:Button text="添加存储表" parse-escape-sequences="true" display-tooltip-when-elided="true" name="button-addprofilemap" enable-rich-text="true" style="width: 75px; height: 24px; left: -2px; top: 4px;" />
         </ui:VisualElement>
+        <ui:VisualElement name="visualelement-config" style="flex-grow: 1; height: 33px; max-height: 33px; flex-direction: row; padding-top: -29px;">
+            <uie:ObjectField label="预览存档数据&#10;表" name="objectfield-dataSOfield" style="height: 27px; -unity-font-style: bold; color: rgb(255, 255, 255); width: 274px;" />
+            <ui:Button text="显示数据表格" parse-escape-sequences="true" display-tooltip-when-elided="true" name="button-showtable" style="border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;" />
+        </ui:VisualElement>
+        <ui:ScrollView name="scrollview-tableview" style="max-height: 175px; height: 175px; min-height: 55px; padding-top: 5px;" />
     </ui:VisualElement>
 </ui:UXML>

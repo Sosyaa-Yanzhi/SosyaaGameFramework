@@ -23,7 +23,7 @@ namespace GameFramework.GameplaySystem.InventorySystem
         /// 若网格用于物体本身，则当物体被成功放入容器后，需将其网格匹配状态都切换为true。
         /// </summary>
         [Header("网格占用匹配状态")]
-        public bool bIsSlotMathed = false;
+        public bool bIsSlotMatched = false;
 
         /// <summary>
         /// 网格检测距离：

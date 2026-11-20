@@ -6,6 +6,7 @@ using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 using System.Linq;
 using UnityEngine.InputSystem;
+using GameFramework.GameplaySystem.InventorySystem;
 
 namespace GameFramework.Editor.Inventory
 {
@@ -219,7 +220,8 @@ namespace GameFramework.Editor.Inventory
                     return;
                 }
 
-                if (selectedSlotButtons.Count <= 0)
+                var uniqueSelectedSlotButtons = selectedSlotButtons.Distinct().ToList();
+                if (uniqueSelectedSlotButtons.Count <= 0)
                 {
                     EditorUtility.DisplayDialog(
                         "错误",
@@ -241,22 +243,32 @@ namespace GameFramework.Editor.Inventory
                     return;
                 }
 
+                if (!float.TryParse(_widthTextField.value, out float slotWidth) ||
+                    !float.TryParse(_heightTextField.value, out float slotHeight) ||
+                    float.IsNaN(slotWidth) || float.IsInfinity(slotWidth) || slotWidth <= 0f ||
+                    float.IsNaN(slotHeight) || float.IsInfinity(slotHeight) || slotHeight <= 0f)
+                {
+                    EditorUtility.DisplayDialog(
+                        "错误",
+                        "网格宽度和高度必须是大于 0 的数字！",
+                        "确认"
+                    );
+                    return;
+                }
+
                 // 开始创建网格
                 /// <summary>
                 /// 生成网格时，会选取在编辑器中所选择的网格中x & y坐标最接近远点者作为锚点网格，
                 /// 锚点网格在实际容器网格阵中作为原点存在，坐标为(0 , 0)。
                 /// 注意：此工具主要服务于UI层面，故默认使用 RectTransform 在场景中生成。
                 /// </summary>
-                float pivotX = selectedSlotButtons.Min(x => x._slotRelativePosition.x) , pivotY = selectedSlotButtons.Min(y => y._slotRelativePosition.y);
-                Vector2 offset = new Vector2(0f , 0f) - new Vector2(pivotX , pivotY);
-                
-                RectTransform parentRectTransform = parentobject.GetComponent<RectTransform>();
+                float pivotX = uniqueSelectedSlotButtons.Min(x => x._slotRelativePosition.x) , pivotY = uniqueSelectedSlotButtons.Min(y => y._slotRelativePosition.y);
 
-                for (int i = 0 ; i < selectedSlotButtons.Count ; i++)
+                foreach (var selectedSlotButton in uniqueSelectedSlotButtons)
                 {
                     Vector2 slotPosition = new Vector2(
-                        i * width,
-                        i * height
+                        (selectedSlotButton._slotRelativePosition.x - pivotX) * slotWidth,
+                        (pivotY - selectedSlotButton._slotRelativePosition.y) * slotHeight
                     );
 
                     var newSlotObject = Instantiate(slotObject as GameObject , (slotObject as GameObject).transform.position ,
@@ -268,6 +280,13 @@ namespace GameFramework.Editor.Inventory
                     slotRT.pivot = new Vector2(0.5f , 0.5f);
 
                     slotRT.anchoredPosition = slotPosition;
+
+                    var slotComp = newSlotObject.GetComponent<InventorySlot>();
+                    if (slotComp != null)
+                    {
+                        slotComp.slotPosition = selectedSlotButton._slotRelativePosition;
+                        slotComp.bIsSlotMatched = false;
+                    }
                 }
             };
             #endregion
@@ -325,15 +344,15 @@ namespace GameFramework.Editor.Inventory
         #region 网格状态变更
         void ChangeSlotButtonState(InventorySlotButton inventorySlotButton , bool newState)
         {
+            selectedSlotButtons.RemoveAll(slotButton => slotButton == inventorySlotButton);
             inventorySlotButton.isSlotSelected = newState;
             if (!newState)
             {
-                selectedSlotButtons.Add(inventorySlotButton);
                 inventorySlotButton._slotElement.style.backgroundColor = new StyleColor(new Color32(188 , 188 , 188 , 255));
             }
             else
             {
-                selectedSlotButtons.Remove(inventorySlotButton);
+                selectedSlotButtons.Add(inventorySlotButton);
                 inventorySlotButton._slotElement.style.backgroundColor = new StyleColor(new Color32(4 , 160 , 0 , 255));
             }
         }

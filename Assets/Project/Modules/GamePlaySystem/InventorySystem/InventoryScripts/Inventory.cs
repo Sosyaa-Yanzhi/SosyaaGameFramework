@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace GameFramework.GameplaySystem.InventorySystem
 {
-    public class Inventory : MonoBehaviour
+    public class Inventory : MonoBehaviour , IPointerEnterHandler , IPointerExitHandler
     {
         /// <summary>
         /// inventoryID 容器id，每个容器（独立的网格阵）都应有单独的ID，用于后续的检索。
@@ -16,8 +18,8 @@ namespace GameFramework.GameplaySystem.InventorySystem
         /// inventorySlots 容器属下网格列表。
         /// </summary>
         [Header("容器属下网格列表")]
-        public readonly List<InventorySlot> inventorySlots = new List<InventorySlot>();
-    
+        public List<InventorySlot> inventorySlots = new List<InventorySlot>();
+
         public Inventory(int id)
         {
             inventoryID = id;
@@ -36,5 +38,21 @@ namespace GameFramework.GameplaySystem.InventorySystem
             return null;
         }
         #endregion
+
+        public void OnPointerEnter(PointerEventData data)
+        {
+            InventoryManager.Instance.NotifyInventoryEntered(this);
+        }
+
+        public void OnPointerExit(PointerEventData data)
+        {
+            InventoryManager.Instance.NotifyInventoryExited(this);
+        }
+
+        void Awake()
+        {
+            // 初始化网格列表
+            inventorySlots = GetComponentsInChildren<InventorySlot>().ToList();
+        }
     }
 }
